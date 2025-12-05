@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SanDisk Label Printer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Arimo:wght@400;700&display=swap');
+      
+      body {
+        font-family: 'Arimo', Arial, sans-serif; /* PDF specifies Arial, Arimo is a metric-compatible Google Font */
+      }
+
+      /* Print Specific Styles */
+      @media print {
+        @page {
+          margin: 0;
+          size: A4 portrait; /* Force A4 Portrait Mode */
+        }
+        body * {
+          visibility: hidden;
+        }
+        #print-area, #print-area * {
+          visibility: visible;
+        }
+        #print-area {
+          position: absolute;
+          left: 0;
+          top: 0;
+          width: 100%;
+          height: 100%;
+          display: flex;
+          justify-content: center; /* Center horizontally */
+          align-items: flex-start; /* Align to top */
+          padding-top: 20px;
+          background: white;
+        }
+        /* Hide scrollbars during print */
+        ::-webkit-scrollbar {
+          display: none;
+        }
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react/": "https://aistudiocdn.com/react@^19.2.1/",
+    "react": "https://aistudiocdn.com/react@^19.2.1",
+    "lucide-react": "https://aistudiocdn.com/lucide-react@^0.555.0",
+    "jspdf": "https://aistudiocdn.com/jspdf@^3.0.4",
+    "@vitejs/plugin-react": "https://aistudiocdn.com/@vitejs/plugin-react@^5.1.1",
+    "vite": "https://aistudiocdn.com/vite@^7.2.6",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.1/",
+    "html2canvas": "https://aistudiocdn.com/html2canvas@^1.4.1",
+    "qrcode.react": "https://aistudiocdn.com/qrcode.react@^4.2.0",
+    "react-barcode": "https://aistudiocdn.com/react-barcode@^1.6.1"
+  }
+}
+</script>
+</head>
+  <body class="bg-gray-100 text-gray-900">
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+  </body>
+</html>
