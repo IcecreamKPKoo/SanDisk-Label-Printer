@@ -1,3 +1,5 @@
+
+
 export type LabelType = 'non-substrate' | 'substrate';
 export type LabelSize = 'outer' | 'inner';
 
@@ -42,15 +44,15 @@ export const initialLabelData: LabelData = {
   sandiskPN: "",
   quantity: "",
   mpn: "",
-  vendorLot: "",
+  vendorLot: "N / A", // Default per request
   expiryDate: "31-12-50", // Fixed default per request
   coo: "JP", // Default per request
   dateCode: "", // Generated dynamically
   boxNo: "1",
   printDate: new Date().toLocaleDateString('en-GB'), // DD/MM/YYYY
-  msl: "1",
+  msl: "", // Default per request
   grDate: "",
-  vendorCode: "3000594", // Fixed default per request
+  vendorCode: "14881", // Default per request
   plantCode: "C039",
   materialDesc: "",
   asn: "",

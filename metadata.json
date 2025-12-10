@@ -1,5 +1,5 @@
 {
-  "name": "SanDisk Label Printer",
+  "name": "SanDisk Label Print for Outer and Inner Box",
   "description": "A compliant label generation system for SanDisk SNC Project standards, supporting both Substrate and Non-Substrate formats with automatic barcode and QR code generation.",
   "requestFramePermissions": []
 }

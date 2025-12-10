@@ -1,5 +1,6 @@
+
 import React, { useState, useEffect, useRef } from 'react';
-import { Settings, FileText, Download, RefreshCw } from 'lucide-react';
+import { Settings, FileText, Download, RefreshCw, Printer } from 'lucide-react';
 import { LabelData, LabelSize, initialLabelData } from './types';
 import { OuterLabel } from './components/OuterLabel';
 import { InnerLabel } from './components/InnerLabel';
@@ -44,7 +45,7 @@ const App = () => {
       dateCode: currentYYWW,
       huNumber: initialHU,
       // Ensure fixed values are set if not already in initialLabelData
-      vendorCode: "3000594",
+      vendorCode: "14881",
       expiryDate: "31-12-50",
       supplierName: "ELCOMP TRADING SDN BHD",
       coo: "JP"
@@ -52,22 +53,32 @@ const App = () => {
   }, []);
 
   /**
-   * Generates HU Number based on Time.
-   * Format: 1 + HHmmss (6 digits)
-   * Example: 1103045 (10:30:45)
-   * Full String: 1HHmmss + YYWW + V + VendorCode
+   * Generates HU Number based on Date and Time.
+   * Constraint: First number '1' fixed, followed by 6 unique digits.
+   * Logic: Calculates total seconds elapsed since start of the current week (Monday).
+   * Range: 0 to 604,799 (Fits in 6 digits).
+   * Uniqueness: Unique per second within a week. YYWW changes weekly, ensuring global uniqueness.
    */
   const generateTimeBasedHU = (yyww: string) => {
     const now = new Date();
-    const hours = now.getHours().toString().padStart(2, '0');
-    const minutes = now.getMinutes().toString().padStart(2, '0');
-    const seconds = now.getSeconds().toString().padStart(2, '0');
     
-    // Constraint: First number 1 fixed, followed by 6 unique digits (HHmmss)
-    const uniqueSixDigits = `${hours}${minutes}${seconds}`;
+    // ISO Week starts Monday. Align counter to reset on Monday.
+    // getDay(): Sun=0, Mon=1...Sat=6 -> Map to: Mon=0, Tue=1...Sun=6
+    const dayOfWeek = (now.getDay() + 6) % 7; 
+    
+    const hours = now.getHours();
+    const minutes = now.getMinutes();
+    const seconds = now.getSeconds();
+    
+    // Calculate total seconds elapsed since start of the week
+    const totalSeconds = (dayOfWeek * 86400) + (hours * 3600) + (minutes * 60) + seconds;
+    
+    // Pad to 6 digits (max 604799 fits in 999999)
+    const uniqueSixDigits = totalSeconds.toString().padStart(6, '0');
+    
     const runningNum = `1${uniqueSixDigits}`;
     
-    const vendorCode = "3000594"; 
+    const vendorCode = "14881"; 
     // Format: RunningNum + YYWW + V + VendorCode
     return `${runningNum}${yyww}V${vendorCode}`;
   };
@@ -285,8 +296,19 @@ const App = () => {
 
         {/* Right Preview Area */}
         <div className="w-2/3 bg-gray-200 rounded-xl flex items-center justify-center p-10 relative print:static">
-           <div className="absolute top-4 right-4 text-gray-500 text-sm font-medium bg-gray-100 px-3 py-1 rounded-full print:hidden">
-             Live Preview: {labelSize === 'outer' ? '6" x 3.23"' : '3.1" x 1.6"'}
+           
+           {/* Controls Container */}
+           <div className="absolute top-4 right-4 flex gap-2 print:hidden">
+             <button
+                onClick={() => window.print()}
+                className="flex items-center gap-2 bg-white hover:bg-gray-50 text-gray-700 px-3 py-1.5 rounded-lg text-sm font-medium shadow-sm border border-gray-200 transition-colors"
+             >
+                <Printer size={16} />
+                Print
+             </button>
+             <div className="text-gray-500 text-sm font-medium bg-gray-100 px-3 py-1.5 rounded-lg flex items-center border border-gray-200">
+               {labelSize === 'outer' ? '6" x 3.23"' : '3.1" x 1.6"'}
+             </div>
            </div>
            
            {/* The actual label component with Ref for Capture */}
